@@ -13,6 +13,9 @@ import { CursoEstudiante } from './asignaciones/entities/curso-estudiante.entity
 
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { AuthModule } from './auth/auth.module';
+import { EstudiantesModule } from './estudiantes/estudiantes.module';
+import { CursosModule } from './cursos/cursos.module';
+import { AsignacionesModule } from './asignaciones/asignaciones.module';
 
 @Module({
   imports: [
@@ -40,6 +43,9 @@ import { AuthModule } from './auth/auth.module';
     }),
     UsuariosModule,
     AuthModule,
+    EstudiantesModule,
+    CursosModule,
+    AsignacionesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
