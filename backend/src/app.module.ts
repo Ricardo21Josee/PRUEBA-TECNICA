@@ -11,6 +11,9 @@ import { Catedratico } from './cursos/entities/catedratico.entity';
 import { CursoCatedratico } from './cursos/entities/curso-catedratico.entity';
 import { CursoEstudiante } from './asignaciones/entities/curso-estudiante.entity';
 
+import { UsuariosModule } from './usuarios/usuarios.module';
+import { AuthModule } from './auth/auth.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
@@ -35,6 +38,8 @@ import { CursoEstudiante } from './asignaciones/entities/curso-estudiante.entity
         logging: false,
       }),
     }),
+    UsuariosModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
