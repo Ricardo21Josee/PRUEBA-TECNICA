@@ -1,0 +1,147 @@
+<div class="page">
+  <header class="page-header">
+    <div>
+      <h1>Gestión de Estudiantes</h1>
+      <p class="subtitle">Administra los estudiantes registrados en el sistema</p>
+    </div>
+    <button class="btn-primary" (click)="abrirCrear()">+ Nuevo Estudiante</button>
+  </header>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="count">{{ estudiantes.length }} estudiantes</span>
+      <button class="btn-ghost" (click)="cargar()" [disabled]="loading">
+        ↻ Actualizar
+      </button>
+    </div>
+
+    <div class="loading" *ngIf="loading">Cargando...</div>
+
+    <table class="table" *ngIf="!loading && estudiantes.length > 0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Nivel</th>
+          <th>Grado</th>
+          <th>Carrera</th>
+          <th>Sección</th>
+          <th class="right">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let est of estudiantes">
+          <td class="mono">{{ est.idEstudiante }}</td>
+          <td>{{ est.nombre }}</td>
+          <td>{{ est.apellido }}</td>
+          <td>{{ est.nivel }}</td>
+          <td>{{ est.grado }}</td>
+          <td>{{ est.idCarrera }}</td>
+          <td>{{ est.seccion }}</td>
+          <td class="right">
+            <button class="btn-edit" (click)="abrirEditar(est)">Editar</button>
+            <button class="btn-delete" (click)="eliminar(est)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="empty" *ngIf="!loading && estudiantes.length === 0">
+      No hay estudiantes registrados
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" *ngIf="modalOpen" (click)="cerrarModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header class="modal-header">
+        <h2>{{ editMode ? 'Editar Estudiante' : 'Nuevo Estudiante' }}</h2>
+        <button class="close" (click)="cerrarModal()">×</button>
+      </header>
+
+      <form [formGroup]="form" (ngSubmit)="guardar()" class="modal-body">
+        <div class="grid">
+          <div class="field">
+            <label>ID Estudiante *</label>
+            <input formControlName="idEstudiante" placeholder="2024001" />
+            <small
+              class="error"
+              *ngIf="
+                form.get('idEstudiante')?.invalid &&
+                form.get('idEstudiante')?.touched
+              "
+            >
+              Campo obligatorio
+            </small>
+          </div>
+
+          <div class="field">
+            <label>Sección *</label>
+            <select formControlName="seccion">
+              <option *ngFor="let s of secciones" [value]="s">{{ s }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Nombre *</label>
+            <input formControlName="nombre" placeholder="Ana" />
+            <small
+              class="error"
+              *ngIf="
+                form.get('nombre')?.invalid && form.get('nombre')?.touched
+              "
+            >
+              Campo obligatorio
+            </small>
+          </div>
+
+          <div class="field">
+            <label>Apellido *</label>
+            <input formControlName="apellido" placeholder="Ramírez" />
+            <small
+              class="error"
+              *ngIf="
+                form.get('apellido')?.invalid && form.get('apellido')?.touched
+              "
+            >
+              Campo obligatorio
+            </small>
+          </div>
+
+          <div class="field">
+            <label>Nivel *</label>
+            <select formControlName="nivel">
+              <option *ngFor="let n of niveles" [value]="n">{{ n }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Grado *</label>
+            <select formControlName="grado">
+              <option *ngFor="let g of grados" [value]="g">{{ g }}</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label>Carrera *</label>
+            <select formControlName="idCarrera">
+              <option *ngFor="let c of carreras" [value]="c.id">
+                {{ c.nombre }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <footer class="modal-footer">
+          <button type="button" class="btn-ghost" (click)="cerrarModal()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-primary" [disabled]="saving">
+            {{ saving ? 'Guardando...' : 'Guardar' }}
+          </button>
+        </footer>
+      </form>
+    </div>
+  </div>
+</div>
