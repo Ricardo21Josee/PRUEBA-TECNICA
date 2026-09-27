@@ -1,8 +1,6 @@
 /* =========================================================
-   SISTEMA DE GESTIÓN ACADÉMICA UNIVERSITARIA
-   Script 01: Creación de base de datos y tablas
-   Motor: MySQL 8+
-   Autor: Desarrollo 4D
+    SISTEMA DE GESTIÓN ACADÉMICA UNIVERSITARIA
+    Script 01: Creación de la base de datos y tablas
    ========================================================= */
 
 DROP DATABASE IF EXISTS GestionAcademica;
@@ -12,7 +10,7 @@ CREATE DATABASE GestionAcademica
 USE GestionAcademica;
 
 /* =========================================================
-   TABLA: Facultad (catálogo)
+    TABLA: Facultad (catálogo)
    ========================================================= */
 CREATE TABLE Facultad (
     idFacultad      VARCHAR(10)  NOT NULL,
@@ -21,7 +19,7 @@ CREATE TABLE Facultad (
 ) ENGINE=InnoDB;
 
 /* =========================================================
-   TABLA: Carrera (catálogo)
+    TABLA: Carrera (catálogo)
    ========================================================= */
 CREATE TABLE Carrera (
     idCarrera      VARCHAR(10)  NOT NULL,
@@ -34,7 +32,7 @@ CREATE TABLE Carrera (
 ) ENGINE=InnoDB;
 
 /* =========================================================
-   TABLA: Catedratico
+    TABLA: Catedratico
    ========================================================= */
 CREATE TABLE Catedratico (
     idCatedratico      VARCHAR(15)  NOT NULL,
@@ -44,12 +42,12 @@ CREATE TABLE Catedratico (
 ) ENGINE=InnoDB;
 
 /* =========================================================
-   TABLA: Curso (T2 del PDF)
+    TABLA: Curso
    ========================================================= */
 CREATE TABLE Curso (
     idCurso      VARCHAR(15)  NOT NULL,
     nombreCurso  VARCHAR(100) NOT NULL,
-    idGrado      VARCHAR(15)  NOT NULL,   -- ej: 1ER, 2DO, 4TO
+    idGrado      VARCHAR(15)  NOT NULL,
     idCarrera    VARCHAR(10)  NOT NULL,
     creditos     INT          NOT NULL DEFAULT 1,
     PRIMARY KEY (idCurso),
@@ -59,8 +57,8 @@ CREATE TABLE Curso (
 ) ENGINE=InnoDB;
 
 /* =========================================================
-   TABLA: CursoCatedratico (N:M entre Curso y Catedratico)
-   Permite que un curso tenga varios catedráticos
+    TABLA: Cursos del Catedratico
+    Permite que un curso tenga varios catedráticos
    ========================================================= */
 CREATE TABLE CursoCatedratico (
     idCurso        VARCHAR(15) NOT NULL,
@@ -73,16 +71,16 @@ CREATE TABLE CursoCatedratico (
 ) ENGINE=InnoDB;
 
 /* =========================================================
-   TABLA: Estudiante (T1 del PDF)
+    TABLA: Estudiante 
    ========================================================= */
 CREATE TABLE Estudiante (
     idEstudiante  VARCHAR(15)  NOT NULL,
     nombre        VARCHAR(100) NOT NULL,
     apellido      VARCHAR(100) NOT NULL,
-    nivel         VARCHAR(30)  NOT NULL,   -- ej: Diversificado, Universitario
-    grado         VARCHAR(15)  NOT NULL,   -- ej: 1er, 2do, 4to
+    nivel         VARCHAR(30)  NOT NULL,   
+    grado         VARCHAR(15)  NOT NULL,  
     idCarrera     VARCHAR(10)  NOT NULL,
-    seccion       VARCHAR(5)   NOT NULL,   -- ej: A, B, C
+    seccion       VARCHAR(5)   NOT NULL,   
     PRIMARY KEY (idEstudiante),
     CONSTRAINT FK_Estudiante_Carrera FOREIGN KEY (idCarrera)
         REFERENCES Carrera(idCarrera)
@@ -90,8 +88,8 @@ CREATE TABLE Estudiante (
 ) ENGINE=InnoDB;
 
 /* =========================================================
-   TABLA: CursoEstudiante (T3 del PDF)
-   Tabla intermedia que relaciona estudiantes con cursos
+    TABLA: Cursos de Estudiantes
+    Tabla intermedia que relaciona estudiantes con cursos
    ========================================================= */
 CREATE TABLE CursoEstudiante (
     idEstudiante     VARCHAR(15) NOT NULL,
@@ -105,15 +103,15 @@ CREATE TABLE CursoEstudiante (
 ) ENGINE=InnoDB;
 
 /* =========================================================
-   TABLA: Usuario (autenticación JWT + roles)
-   Roles: ADMIN | ESTUDIANTE
+    TABLA: Usuario (autenticación JWT + roles)
+    Roles: ADMIN | ESTUDIANTE
    ========================================================= */
 CREATE TABLE Usuario (
     idUsuario    INT AUTO_INCREMENT NOT NULL,
     email        VARCHAR(100) NOT NULL,
-    password     VARCHAR(200) NOT NULL,   -- hash bcrypt
-    rol          VARCHAR(20)  NOT NULL,   -- ADMIN | ESTUDIANTE
-    idEstudiante VARCHAR(15)  NULL,       -- solo si rol = ESTUDIANTE
+    password     VARCHAR(200) NOT NULL,  
+    rol          VARCHAR(20)  NOT NULL,   
+    idEstudiante VARCHAR(15)  NULL,       
     activo       TINYINT(1)   NOT NULL DEFAULT 1,
     fechaCreacion DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (idUsuario),
@@ -125,11 +123,11 @@ CREATE TABLE Usuario (
 ) ENGINE=InnoDB;
 
 /* =========================================================
-   ÍNDICES de apoyo para consultas frecuentes
+    ÍNDICES de apoyo para consultas frecuentes
    ========================================================= */
 CREATE INDEX IX_Estudiante_Carrera ON Estudiante(idCarrera);
 CREATE INDEX IX_Curso_Carrera      ON Curso(idCarrera);
 CREATE INDEX IX_CE_Curso           ON CursoEstudiante(idCurso);
 CREATE INDEX IX_Usuario_Rol        ON Usuario(rol);
 
-SELECT '✔ Base de datos GestionAcademica creada correctamente.' AS mensaje;
+SELECT 'Base de datos GestionAcademica creada correctamente.' AS mensaje;

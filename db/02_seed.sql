@@ -89,15 +89,14 @@ INSERT INTO CursoEstudiante (idEstudiante, idCurso) VALUES
 
 
 /* ============ USUARIOS (login + roles) ============ */
-/* Los passwords se hashean con bcrypt desde NestJS al primer arranque.
-   Credenciales por defecto:
-     - Admin:      admin@uni.edu       / Admin123*
-     - Estudiante: 2024001@uni.edu     / Estudiante123*
-     - Estudiante: 2024002@uni.edu     / Estudiante123*
+/*Credenciales por defecto:
+   - Admin:      admin@uni.edu       / Admin123*
+   - Estudiante: 2024001@uni.edu     / Estudiante123*
+   - Estudiante: 2024002@uni.edu     / Estudiante123*
 */
 INSERT INTO Usuario (email, password, rol, idEstudiante) VALUES
 ('admin@uni.edu',   'PLACEHOLDER_HASH', 'ADMIN',      NULL),
 ('2024001@uni.edu', 'PLACEHOLDER_HASH', 'ESTUDIANTE', '2024001'),
 ('2024002@uni.edu', 'PLACEHOLDER_HASH', 'ESTUDIANTE', '2024002');
 
-SELECT '✔ Datos de prueba insertados correctamente.' AS mensaje;
+SELECT 'Datos de prueba insertados correctamente' AS mensaje;

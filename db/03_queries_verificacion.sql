@@ -1,6 +1,6 @@
 /* =========================================================
-   SISTEMA DE GESTIÓN ACADÉMICA UNIVERSITARIA
-   Script 03: Queries de verificación y ejemplos de lectura
+    SISTEMA DE GESTIÓN ACADÉMICA UNIVERSITARIA
+    Script 03: Queries de verificación y ejemplos de lectura
    ========================================================= */
 
 USE GestionAcademica;
