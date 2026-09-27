@@ -1,0 +1,154 @@
+<div class="page">
+  <header class="page-header">
+    <div>
+      <h1>Gestión de Cursos</h1>
+      <p class="subtitle">Administra los cursos y sus catedráticos</p>
+    </div>
+    <button class="btn-primary" (click)="abrirCrear()">+ Nuevo Curso</button>
+  </header>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="count">{{ cursos.length }} cursos</span>
+      <button class="btn-ghost" (click)="cargar()" [disabled]="loading">
+        ↻ Actualizar
+      </button>
+    </div>
+
+    <div class="loading" *ngIf="loading">Cargando...</div>
+
+    <table class="table" *ngIf="!loading && cursos.length > 0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Grado</th>
+          <th>Carrera</th>
+          <th>Créditos</th>
+          <th>Catedráticos</th>
+          <th class="right">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let curso of cursos">
+          <td class="mono">{{ curso.idCurso }}</td>
+          <td>{{ curso.nombreCurso }}</td>
+          <td>{{ curso.idGrado }}</td>
+          <td>{{ curso.idCarrera }}</td>
+          <td>{{ curso.creditos }}</td>
+          <td>
+            <span class="chip" *ngFor="let cat of curso.catedratico">
+              {{ cat.nombreCatedratico }}
+            </span>
+            <span class="muted" *ngIf="!curso.catedratico?.length">—</span>
+          </td>
+          <td class="right">
+            <button class="btn-edit" (click)="abrirEditar(curso)">Editar</button>
+            <button class="btn-delete" (click)="eliminar(curso)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="empty" *ngIf="!loading && cursos.length === 0">
+      No hay cursos registrados
+    </div>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="modalOpen" (click)="cerrarModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header class="modal-header">
+        <h2>{{ editMode ? 'Editar Curso' : 'Nuevo Curso' }}</h2>
+        <button class="close" (click)="cerrarModal()">×</button>
+      </header>
+
+      <form [formGroup]="form" (ngSubmit)="guardar()" class="modal-body">
+        <div class="grid">
+          <div class="field">
+            <label>ID Curso *</label>
+            <input formControlName="idCurso" placeholder="MAT101" />
+          </div>
+
+          <div class="field">
+            <label>Nombre del Curso *</label>
+            <input formControlName="nombreCurso" placeholder="Matemática Básica" />
+          </div>
+
+          <div class="field">
+            <label>Grado *</label>
+            <select formControlName="idGrado">
+              <option *ngFor="let g of grados" [value]="g">{{ g }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Créditos *</label>
+            <input type="number" formControlName="creditos" min="1" />
+          </div>
+
+          <div class="field full">
+            <label>Carrera *</label>
+            <select formControlName="idCarrera">
+              <option *ngFor="let c of carreras" [value]="c.id">
+                {{ c.nombre }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <h3>Catedráticos</h3>
+            <button type="button" class="btn-ghost" (click)="agregarCatedratico()">
+              + Agregar
+            </button>
+          </div>
+
+          <div
+            class="catedratico-row"
+            *ngFor="let cat of catedraticos.controls; let i = index"
+            [formGroupName]="i"
+          >
+            <select
+              formControlName="idCatedratico"
+              (change)="onSelectCatedratico(i, $any($event.target).value)"
+            >
+              <option value="">Selecciona un catedrático</option>
+              <option
+                *ngFor="let c of catedraticosDisponibles"
+                [value]="c.idCatedratico"
+              >
+                {{ c.nombreCatedratico }}
+              </option>
+            </select>
+            <input
+              formControlName="nombreCatedratico"
+              placeholder="Nombre"
+              readonly
+            />
+            <button
+              type="button"
+              class="btn-delete"
+              (click)="quitarCatedratico(i)"
+            >
+              ×
+            </button>
+          </div>
+
+          <div class="muted small" *ngIf="catedraticos.length === 0">
+            Sin catedráticos asignados
+          </div>
+        </div>
+
+        <footer class="modal-footer">
+          <button type="button" class="btn-ghost" (click)="cerrarModal()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-primary" [disabled]="saving">
+            {{ saving ? 'Guardando...' : 'Guardar' }}
+          </button>
+        </footer>
+      </form>
+    </div>
+  </div>
+</div>

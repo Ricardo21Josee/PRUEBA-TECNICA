@@ -1,0 +1,101 @@
+<div class="page">
+  <header class="page-header">
+    <div>
+      <h1>Asignación de Cursos</h1>
+      <p class="subtitle">Asigna o quita cursos a los estudiantes</p>
+    </div>
+    <button class="btn-ghost" (click)="cargar()" [disabled]="loading">
+      ↻ Actualizar
+    </button>
+  </header>
+
+  <div class="loading" *ngIf="loading">Cargando...</div>
+
+  <ng-container *ngIf="!loading">
+    <div class="card">
+      <div class="selector-row">
+        <div class="field">
+          <label>Estudiante</label>
+          <select
+            [(ngModel)]="idEstudianteSeleccionado"
+            (ngModelChange)="idCursoSeleccionado = ''"
+          >
+            <option value="">Selecciona un estudiante</option>
+            <option *ngFor="let e of estudiantes" [value]="e.idEstudiante">
+              {{ e.idEstudiante }} — {{ e.nombre }} {{ e.apellido }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" *ngIf="estudianteActual">
+      <div class="student-info">
+        <h2>
+          {{ estudianteActual.nombre }} {{ estudianteActual.apellido }}
+        </h2>
+        <div class="badges">
+          <span class="badge">{{ estudianteActual.idEstudiante }}</span>
+          <span class="badge">{{ estudianteActual.idCarrera }}</span>
+          <span class="badge">{{ estudianteActual.grado }}</span>
+          <span class="badge">Sección {{ estudianteActual.seccion }}</span>
+        </div>
+      </div>
+
+      <div class="asignar-row">
+        <select [(ngModel)]="idCursoSeleccionado">
+          <option value="">Selecciona un curso para asignar</option>
+          <option *ngFor="let c of cursosDisponibles" [value]="c.idCurso">
+            {{ c.idCurso }} — {{ c.nombreCurso }}
+          </option>
+        </select>
+        <button
+          class="btn-primary"
+          (click)="asignar()"
+          [disabled]="saving || !idCursoSeleccionado"
+        >
+          {{ saving ? 'Asignando...' : '+ Asignar Curso' }}
+        </button>
+      </div>
+    </div>
+
+    <div class="card" *ngIf="estudianteActual">
+      <div class="card-header">
+        <span class="count">
+          Cursos asignados ({{ cursosAsignados.length }})
+        </span>
+      </div>
+
+      <table class="table" *ngIf="cursosAsignados.length > 0">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Grado</th>
+            <th>Créditos</th>
+            <th class="right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let curso of cursosAsignados">
+            <td class="mono">{{ curso.idCurso }}</td>
+            <td>{{ curso.nombreCurso }}</td>
+            <td>{{ curso.idGrado }}</td>
+            <td>{{ curso.creditos }}</td>
+            <td class="right">
+              <button class="btn-delete" (click)="quitar(curso)">Quitar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="empty" *ngIf="cursosAsignados.length === 0">
+        Este estudiante no tiene cursos asignados
+      </div>
+    </div>
+
+    <div class="empty big" *ngIf="!estudianteActual">
+      Selecciona un estudiante para ver y gestionar sus cursos
+    </div>
+  </ng-container>
+</div>

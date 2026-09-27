@@ -1,0 +1,49 @@
+<div class="page">
+  <header class="page-header">
+    <div>
+      <h1>Mis Cursos</h1>
+      <p class="subtitle">Cursos asignados en tu carrera</p>
+    </div>
+    <button class="btn-ghost" (click)="cargar()" [disabled]="loading">
+      ↻ Actualizar
+    </button>
+  </header>
+
+  <div class="loading" *ngIf="loading">Cargando...</div>
+
+  <ng-container *ngIf="!loading && estudiante">
+    <div class="profile-card">
+      <div class="avatar">
+        {{ estudiante.nombre.charAt(0) }}{{ estudiante.apellido.charAt(0) }}
+      </div>
+      <div class="info">
+        <h2>{{ estudiante.nombre }} {{ estudiante.apellido }}</h2>
+        <div class="badges">
+          <span class="badge">{{ estudiante.idEstudiante }}</span>
+          <span class="badge">{{ estudiante.idCarrera }}</span>
+          <span class="badge">{{ estudiante.grado }}</span>
+          <span class="badge">Sección {{ estudiante.seccion }}</span>
+          <span class="badge">{{ estudiante.nivel }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="courses-section">
+      <h3>Mis cursos ({{ estudiante.cursosAsignados.length }})</h3>
+
+      <div class="courses-grid" *ngIf="estudiante.cursosAsignados.length > 0">
+        <div
+          class="course-card"
+          *ngFor="let curso of estudiante.cursosAsignados"
+        >
+          <div class="course-code">{{ curso.idCurso }}</div>
+          <div class="course-name">{{ curso.nombreCurso }}</div>
+        </div>
+      </div>
+
+      <div class="empty" *ngIf="estudiante.cursosAsignados.length === 0">
+        No tienes cursos asignados todavía
+      </div>
+    </div>
+  </ng-container>
+</div>
