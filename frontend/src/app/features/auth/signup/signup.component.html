@@ -1,0 +1,77 @@
+<div class="signup-page">
+  <div class="signup-card">
+    <div class="brand">
+      <span class="logo">🎓</span>
+      <h1>Crear Cuenta</h1>
+      <p>Regístrate para acceder al sistema</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="field">
+        <label>Email *</label>
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="usuario@uni.edu"
+        />
+        <small
+          class="error"
+          *ngIf="
+            form.get('email')?.invalid && form.get('email')?.touched
+          "
+        >
+          Ingresa un email válido
+        </small>
+      </div>
+
+      <div class="field">
+        <label>Contraseña *</label>
+        <input
+          type="password"
+          formControlName="password"
+          placeholder="Mínimo 6 caracteres"
+        />
+        <small
+          class="error"
+          *ngIf="
+            form.get('password')?.invalid && form.get('password')?.touched
+          "
+        >
+          Mínimo 6 caracteres
+        </small>
+      </div>
+
+      <div class="field">
+        <label>Rol *</label>
+        <select formControlName="rol">
+          <option value="ESTUDIANTE">Estudiante</option>
+          <option value="ADMIN">Administrador</option>
+        </select>
+      </div>
+
+      <div class="field" *ngIf="esEstudiante">
+        <label>ID Estudiante *</label>
+        <input
+          formControlName="idEstudiante"
+          placeholder="2024001"
+        />
+        <small class="hint">
+          Debe existir un estudiante registrado con este ID.
+        </small>
+      </div>
+
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="loading || form.invalid"
+      >
+        {{ loading ? 'Creando cuenta...' : 'Crear Cuenta' }}
+      </button>
+    </form>
+
+    <p class="login-link">
+      ¿Ya tienes cuenta?
+      <a routerLink="/login">Inicia sesión</a>
+    </p>
+  </div>
+</div>
